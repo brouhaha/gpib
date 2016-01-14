@@ -1,0 +1,64 @@
+# Test vectors for IEEE 488.1 Acceptor Handshake (AH) interface function
+# Copyright 2016 Eric Smith <spacewar@gmail.com>
+
+#                                                            dev
+#  wait                                                      chg
+#  state  pon rdy tcs nba ATN  list  talk  cont  sh    ah    mlt RFD DAV DAC
+#  -----  --- --- --- --- ---  ----  ----  ----  ----  ----  --- --- --- ---
+"reset with pon to force SH into SIDS, AH into AIDS"
+   false   1   0   0   0   0   LIDS  TIDS  CIDS  SIDS  AIDS   1   1   0   1
+   false   0   0   0   0   0   LIDS  TIDS  CIDS  SIDS  AIDS   1   1   0   1
+
+"talker enters TACS, causes SH to enter SGNS"
+   false   0   0   0   0   0   LIDS  TACS  CIDS  SGNS  AIDS   1   1   0   1
+
+"listener enters LACS, causes AH to enter ANRS"
+   false   0   0   0   0   0   LACS  TACS  CIDS  SGNS  ANRS   1   0   0   0
+
+# transfer one byte with AH rdy preceding SH nba
+"rdy: AH enters ACRS"
+   false   0   1   0   0   0   LACS  TACS  CIDS  SGNS  ACRS   1   1   0   0
+
+"nba: SH enters SDYS, then (after delay) STRS"
+   false   0   1   0   1   0   LACS  TACS  CIDS  SDYS  ACRS   0   1   0   0
+   true    0   1   0   1   0   LACS  TACS  CIDS  STRS  ACRS   0   1   1   0
+
+"DAV causes AH to enter ACDS"
+   false   0   1   0   1   0   LACS  TACS  CIDS  STRS  ACDS   0   0   1   0
+
+"!rdy: AH enters AWNS"
+   false   0   0   0   1   0   LACS  TACS  CIDS  STRS  AWNS   0   0   1   1
+
+"DAC causes SH to enter SWNS"
+   false   0   0   0   1   0   LACS  TACS  CIDS  SWNS  AWNS   1   0   0   1
+
+"!DAV causes AH to enter ANRS"
+   false   0   0   0   1   0   LACS  TACS  CIDS  SWNS  ANRS   1   0   0   0
+
+"!nba causes SH to enter SGNS"
+   false   0   0   0   0   0   LACS  TACS  CIDS  SGNS  ANRS   1   0   0   0
+
+# transfer one byte with SH nba preceding AH rdy
+"nba: SH enters SDYS, but doesn't proceed to STRS"
+   false   0   0   0   1   0   LACS  TACS  CIDS  SDYS  ANRS   0   0   0   0
+   false   0   0   0   1   0   LACS  TACS  CIDS  SDYS  ANRS   0   0   0   0
+
+"rdy: AH enters ACRS, then (after delay) SH enters STRS"
+   false   0   1   0   1   0   LACS  TACS  CIDS  SDYS  ACRS   0   1   0   0
+   true    0   1   0   1   0   LACS  TACS  CIDS  STRS  ACRS   0   1   1   0
+
+"DAV causes AH to enter ACDS"
+   false   0   1   0   1   0   LACS  TACS  CIDS  STRS  ACDS   0   0   1   0
+
+"!rdy: AH enters AWNS"
+   false   0   0   0   1   0   LACS  TACS  CIDS  STRS  AWNS   0   0   1   1
+
+"DAC causes SH to enter SWNS"
+   false   0   0   0   1   0   LACS  TACS  CIDS  SWNS  AWNS   1   0   0   1
+
+"!DAV causes AH to enter ANRS"
+   false   0   0   0   1   0   LACS  TACS  CIDS  SWNS  ANRS   1   0   0   0
+
+"!nba causes SH to enter SGNS"
+   false   0   0   0   0   0   LACS  TACS  CIDS  SGNS  ANRS   1   0   0   0
+

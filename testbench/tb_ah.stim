@@ -1,0 +1,105 @@
+# Test vectors for IEEE 488.1 Acceptor Handshake (AH) interface function
+# Copyright 2016 Eric Smith <spacewar@gmail.com>
+
+# In the following licensing information, the terms "program" includes but
+# is not limited to the provided VHDL source files and testbench stimulus
+# files, and any works derived therefrom, even if translated or compiled
+# into a different form and/or embedded in hardware.
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of version 3 of the GNU General Public License
+# (GPL) as published by the Free Software Foundation, but not any
+# earlier or later version of the GPL.
+
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#  wait                                    RFD RFD DAC DAC
+#  state  pon rdy tcs ATN DAV  list  ah    out en  out en
+#  -----  --- --- --- --- ---  ----  ----  --- --- --- ---
+"reset with pon to force into AIDS"
+   false   1   0   0   0   0   LIDS  AIDS   1   0   1   0
+   false   0   0   0   0   0   LIDS  AIDS   1   0   1   0
+
+"LIDS: assert pon causes no transition"
+   false   1   0   0   0   0   LIDS  AIDS   1   0   1   0
+   false   0   0   0   0   0   LIDS  AIDS   1   0   1   0
+
+"AIDS: ATN = 1 causes transition to ANRS"
+   false   0   0   0   1   0   LIDS  ANRS   0   1   0   1
+
+"ANRS: ATN = 0 causes transition to AIDS"
+   false   0   0   0   0   0   LIDS  AIDS   1   0   1   0
+
+"ANRS: pon = 1 causes transition to AIDS"
+   false   0   0   0   1   0   LIDS  ANRS   0   1   0   1
+   false   1   0   0   0   0   LIDS  AIDS   1   0   1   0
+
+"AIDS: LACS causes transition to ANRS"
+   false   0   0   0   0   0   LACS  ANRS   0   1   0   1
+
+"ANRS: !LACS causes transition to AIDS"
+   false   0   0   0   0   0   LIDS  AIDS   1   0   1   0
+       
+"AIDS: LADS causes transition  to ANRS"
+   false   0   0   0   0   0   LADS  ANRS   0   1   0   1
+
+"ANRS: !LADS causes transition to AIDS"
+   false   0   0   0   0   0   LIDS  AIDS   1   0   1   0
+
+"ANRS: DAV = 1 causes transition to AWNS"
+   false   0   0   0   1   0   LIDS  ANRS   0   1   0   1
+   false   0   0   0   1   1   LIDS  AWNS   0   1   1   0
+
+"AWNS: pon = 1 causes transition to AIDS"
+   false   1   0   0   1   1   LIDS  AIDS   1   0   1   0
+
+"AWNS: !LACS causes transition from AWNS"
+   false   0   0   0   0   0   LACS  ANRS   0   1   0   1
+   false   0   0   0   0   1   LACS  AWNS   0   1   1   0
+   false   0   0   0   0   1   LIDS  AIDS   1   0   1   0
+
+"AWNS: !LADS causes transition from AWNS"
+   false   0   0   0   0   0   LADS  ANRS   0   1   0   1
+   false   0   0   0   0   1   LADS  AWNS   0   1   1   0
+   false   0   0   0   0   1   LIDS  AIDS   1   0   1   0
+
+"ANRS: ATN = 1 and DAV = 0 and tcs = 0 causes transition to ACRS"
+   false   0   0   0   0   0   LACS  ANRS   0   1   0   1
+   false   0   0   0   1   0   LACS  ACRS   1   0   0   1
+
+"ACRS: ATN = 0 and rdy = 0 causes transition to ANRS"
+   false   0   0   0   0   0   LACS  ANRS   0   1   0   1
+
+"ACRS: DAV = 1 causes transition to ACDS"
+   false   0   0   0   1   0   LACS  ACRS   1   0   0   1
+   false   0   0   0   1   1   LACS  ACDS   0   1   0   1
+
+"ACDS: ATN = 0 and !(LACS or LADS) causes transition to AIDS"
+   false   0   0   0   0   1   LIDS  AIDS   1   0   1   0
+
+"ACDS: ATN = 1 and T3 elapsed causes transition to AWNS"
+   false   0   0   0   1   0   LIDS  ANRS   0   1   0   1
+   false   0   0   0   1   0   LIDS  ACRS   1   0   0   1
+   false   0   0   0   1   1   LIDS  ACDS   0   1   0   1
+   true    0   0   0   1   1   LIDS  AWNS   0   1   1   0
+
+"AWNS: DAV = 0 causes transition to ANRS"
+   false   0   0   0   1   0   LIDS  ANRS   0   1   0   1
+
+
+# XXX still need test vectors for
+#     transitions to AIDS from all states other than AIDS, ANRS
+#     transition from AIDS to ANRS
+#     transition from ANRS to ACRS
+#     transition from ACRS to ANRS
+#     transition from ANRS to AWNS
+#     transition from AWNS to ANRS
+#     transition from ACRS to ACDS
+#     transition from ACDS to ACRS
+#     transition from ACDS to AWNS

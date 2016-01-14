@@ -1,0 +1,47 @@
+# Test vectors for IEEE 488.1 Source Handshake (SH) interface function
+# Copyright 2016 Eric Smith <spacewar@gmail.com>
+
+# In the following licensing information, the terms "program" includes but
+# is not limited to the provided VHDL source files and testbench stimulus
+# files, and any works derived therefrom, even if translated or compiled
+# into a different form and/or embedded in hardware.
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of version 3 of the GNU General Public License
+# (GPL) as published by the Free Software Foundation, but not any
+# earlier or later version of the GPL.
+
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#                                                dev
+#  wait                                          chg  DAV DAV
+#  state  pon nba ATN RFD DAC  talk  cont  sh    mlt  out en
+#  -----  --- --- --- --- ---  ----  ----  ----  ---  --- ---
+"reset with pon to force into SIDS"
+   false   1   0   0   0   0   TIDS  CIDS  SIDS   1   0   0
+   false   0   0   0   0   0   TIDS  CIDS  SIDS   1   0   0
+
+"SIDS: assert pon causes no transition"
+   false   1   0   0   0   0   TIDS  CIDS  SIDS   1   0   0
+   false   0   0   0   0   0   TIDS  CIDS  SIDS   1   0   0
+
+"SIDS: TACS causes transition into SGNS"
+   false   0   0   0   0   0   TACS  CIDS  SGNS   1   0   1
+
+"SGNS: nba causes transition into SDYS"
+   false   0   1   0   0   0   TACS  CIDS  SDYS   0   0   1
+
+"SDYS: RFD causes transition into STRS"
+   true    0   1   0   1   0   TACS  CIDS  STRS   0   1   1
+
+"STRS: DAC causes transition into SWNS"
+   false   0   1   0   1   1   TACS  CIDS  SWNS   1   0   1
+
+"SWNS: !nba causes transition into SGNS"
+   false   0   0   0   1   1   TACS  CIDS  SGNS   1   0   1

@@ -1,0 +1,34 @@
+IEEE-488 (GP-IB, HP-IB) synthesizable core in VHDL
+LICENSE.txt
+Copyright 2016 Eric Smith <spacewar@gmail.com>
+
+The IEEE-488 synthesizable core and related testbenches are Free
+Software licensed under the terms of the Free Software Foundation
+General Public License version 3, a copy of which is provided in the
+file gpl3.txt.
+
+In the following licensing information, the term "program" includes
+but is not limited to the provided VHDL source files and testbench
+stimulus files, and any works derived therefrom, even if translated or
+compiled into a different form and/or embedded in hardware.
+
+Redistribution of the GPL-licensed files, whether in source code form,
+compiled, or embedded in an FPGA, ASIC, SoC, etc., imposes certain
+requirements on the licensee.  These requirements may be considered
+undesirable by some commercial entities; entities wishing to
+redistribute the files without being subject to the requirements
+imposed by the GPL should contact the author to negotiate an alternate
+license.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of version 3 of the GNU General Public License
+(GPL) as published by the Free Software Foundation, but not any
+earlier or later version of the GPL.
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
