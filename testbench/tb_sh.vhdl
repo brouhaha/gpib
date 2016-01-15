@@ -29,6 +29,7 @@ use ieee.numeric_std.all;
 use work.tb_util.all;
 
 entity tb_sh is
+  generic (stimulus_filename: string := "tb_sh.stim");
 end tb_sh;
 
 architecture behavioral of tb_sh is
@@ -141,7 +142,7 @@ begin
     variable cycle: integer := 0;
     variable prev_source_handshake_state: source_handshake_state_t;
 
-    file stimulus: text open read_mode is "tb_sh.stim";
+    file stimulus: text open read_mode is stimulus_filename;
     variable l: line;
 
     variable test_name: line;
