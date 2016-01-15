@@ -35,7 +35,7 @@ entity gpib_l is
         addr:   in  std_logic_vector(4 downto 0);
         addr_ext: in  std_logic;  -- address extention (LE)
                                   -- NOTE: change addr_ext only while pon is true
-        sec_addr: in  std_logic_vector (4 downto 0);
+        sec_addr_v: in  std_logic_vector (31 downto 0);
 
         pon:    in  std_logic;  -- power on
 	ltn:    in  std_logic;  -- listen
@@ -84,7 +84,7 @@ begin
 					lun,
                                         addr,
                                         addr_ext,
-                                        sec_addr,
+                                        sec_addr_v,
 				        IFC,
 				        ATN,
                                         multiline)
@@ -98,7 +98,7 @@ begin
               (ltn = '1' and controller_state = CACS) or
               (acceptor_handshake_state = ACDS and
                ((addr_ext = '0' and MLA(ATN, multiline, addr)) or
-                (addr_ext = '1' and MSA(ATN, multiline, sec_addr) and listener_primary_address_state = LPAS)))) then
+                (addr_ext = '1' and MSA(ATN, multiline, sec_addr_v) and listener_primary_address_state = LPAS)))) then
             next_listener_state <= LADS;
           else
             next_listener_state <= listener_state;
@@ -108,7 +108,7 @@ begin
               (acceptor_handshake_state = ACDS and
                (UNL(ATN, multiline) or
                 (addr_ext = '0' and MTA(ATN, multiline, addr)) or
-                (addr_ext = '1' and MSA(ATN, multiline, sec_addr) and talker_primary_address_state = TPAS)))) then
+                (addr_ext = '1' and MSA(ATN, multiline, sec_addr_v) and talker_primary_address_state = TPAS)))) then
             next_listener_state <= LIDS;
           elsif ATN = '0' then
             next_listener_state <= LACS;  -- must occur within t2

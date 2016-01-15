@@ -41,7 +41,7 @@ entity gpib_t is
         addr:     in  std_logic_vector (4 downto 0);
         addr_ext: in  std_logic;  -- address extention (TE)
                                   -- NOTE: change addr_ext only while pon is true
-        sec_addr: in  std_logic_vector (4 downto 0);
+        sec_addr_v: in  std_logic_vector (31 downto 0);
 
         pon:      in  std_logic;  -- power on
         ton:      in  std_logic;  -- talk only
@@ -115,7 +115,7 @@ begin
 			              ton,
                                       addr_ext,
                                       addr,
-                                      sec_addr,
+                                      sec_addr_v,
 				      IFC,
 				      ATN,
                                       multiline)
@@ -128,7 +128,7 @@ begin
           if (ton = '1' or
               (acceptor_handshake_state = ACDS and
                ((addr_ext = '0' and MTA(ATN, multiline, addr)) or
-                (addr_ext = '1' and MSA(ATN, multiline, sec_addr) and talker_primary_address_state = TPAS))))
+                (addr_ext = '1' and MSA(ATN, multiline, sec_addr_v) and talker_primary_address_state = TPAS))))
           then
             next_talker_state <= TADS;
           else
@@ -138,8 +138,8 @@ begin
           if (acceptor_handshake_state = ACDS and
               (OTA(ATN, multiline, addr) or
                (addr_ext = '0' and MLA(ATN, multiline, addr)) or
-               (addr_ext = '1' and OSA(ATN, multiline, sec_addr) and talker_primary_address_state = TPAS) or
-               (addr_ext = '1' and MSA(ATN, multiline, sec_addr) and listener_primary_address_state = LPAS)))
+               (addr_ext = '1' and OSA(ATN, multiline, sec_addr_v) and talker_primary_address_state = TPAS) or
+               (addr_ext = '1' and MSA(ATN, multiline, sec_addr_v) and listener_primary_address_state = LPAS)))
           then
             next_talker_state <= TIDS;
           elsif ATN = '0' and talker_serial_poll_state /= SPMS then

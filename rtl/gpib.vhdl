@@ -54,7 +54,7 @@ entity gpib is
         addr_ext:  in  std_logic;   -- address extention (TE, LE)
                                     -- NOTE: change addr_ext only while
                                     --       pon is true
-        sec_addr:  in  std_logic_vector (4 downto 0);
+        sec_addr_v: in  std_logic_vector (31 downto 0);
 
         data_out:  in  std_logic_vector(7 downto 0); -- data to transmit
 
@@ -277,9 +277,9 @@ begin
     generic map (clock_cycle_time => clock_cycle_time)
     port map (clock    => clock,
 
-              addr     => addr,
-              addr_ext => addr_ext,
-              sec_addr => sec_addr,
+              addr       => addr,
+              addr_ext   => addr_ext,
+              sec_addr_v => sec_addr_v,
 
               pon      => pon,
               ton      => ton,
@@ -306,9 +306,9 @@ begin
     generic map (clock_cycle_time => clock_cycle_time)
     port map (clock     => clock,
 
-              addr      => addr,
-              addr_ext  => addr_ext,
-              sec_addr  => sec_addr,
+              addr        => addr,
+              addr_ext    => addr_ext,
+              sec_addr_v  => sec_addr_v,
 
               pon       => pon,
               ltn       => ltn,

@@ -137,7 +137,7 @@ package gpib_defs is
   
   function MSA(signal ATN: std_logic;
                signal multiline: std_logic_vector(7 downto 0);
-               signal sec_addr: std_logic_vector(4 downto 0))
+               signal sec_addr_v: std_logic_vector(31 downto 0))
     return boolean;
   
   function MTA(signal ATN: std_logic;
@@ -147,7 +147,7 @@ package gpib_defs is
   
   function OSA(signal ATN: std_logic;
                signal multiline: std_logic_vector(7 downto 0);
-               signal sec_addr: std_logic_vector(4 downto 0))
+               signal sec_addr_v: std_logic_vector(31 downto 0))
     return boolean;
   
   function OTA(signal ATN: std_logic;
@@ -285,14 +285,14 @@ package body gpib_defs is
   
   function MSA(signal ATN: std_logic;
                signal multiline: std_logic_vector(7 downto 0);
-               signal sec_addr: std_logic_vector(4 downto 0))
+               signal sec_addr_v: std_logic_vector(31 downto 0))
     return boolean is
+    variable i: integer range 0 to 31;
   begin
-    -- Xilinx tools can't synthesize std_match where both sides aren't static
-    -- return ATN = '1' and std_match(multiline, "X11" & sec_addr);
+    i := to_integer(unsigned(multiline (4 downto 0)));
     return (ATN = '1' and
             std_match(multiline(7 downto 5), "X11") and
-            multiline(4 downto 0) = sec_addr);
+            sec_addr_v (i) = '1');
   end function MSA;
   
   function MTA(signal ATN: std_logic;
@@ -300,19 +300,19 @@ package body gpib_defs is
                signal addr: std_logic_vector(4 downto 0))
     return boolean is
   begin
-    -- Xilinx tools can't synthesize std_match where both sides aren't static
-    -- return ATN = '1' and std_match(multiline, "X10" & addr);
     return (ATN = '1' and
             std_match(multiline(7 downto 5), "X10") and
-            multiline(4 downto 0) = addr);
+            multiline (4 downto 0) = addr);
   end function MTA;
   
   function OSA(signal ATN: std_logic;
                signal multiline: std_logic_vector(7 downto 0);
-               signal sec_addr: std_logic_vector(4 downto 0))
+               signal sec_addr_v: std_logic_vector(31 downto 0))
     return boolean is
+    variable i: integer range 0 to 31;
   begin
-    return SCG(ATN, multiline) and multiline(4 downto 0) /= sec_addr;
+    i := to_integer(unsigned(multiline (4 downto 0)));
+    return SCG(ATN, multiline) and sec_addr_v (i) = '0';
   end function OSA;
   
   function OTA(signal ATN: std_logic;
